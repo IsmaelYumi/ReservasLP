@@ -137,3 +137,16 @@ dist
 # Vite logs files
 vite.config.js.timestamp-*
 vite.config.ts.timestamp-*
+
+# Node
+node_modules/
+npm-debug.log*
+yarn-error.log*
+
+
+# Flutter
+.dart_tool/
+.build/
+.pub/
+.pub-cache/
+flutter_export_environment.sh
