@@ -1,10 +1,10 @@
 import { Request, Response } from 'express';
 import { db } from '../config/BD.config';
 
-// Crear un nuevo evento
+// Crear un nuevo evento (sin requerir autenticación)
 export const crearEvento = async (req: Request, res: Response): Promise<void> => {
     try {
-        const userId = req.userId; // Del middleware verificarToken
+        const userId = req.userId || req.body.userId || 'anonimo'; // Del middleware o del body, o anonimo
         
         const { 
             tipoEvento, 
@@ -49,6 +49,33 @@ export const crearEvento = async (req: Request, res: Response): Promise<void> =>
 
     } catch (error) {
         console.error('Error al crear evento:', error);
+        res.status(500).json({
+            success: false,
+            message: 'Error interno del servidor'
+        });
+    }
+};
+
+// Obtener TODOS los eventos (público - para panel de admin)
+export const obtenerTodosEventos = async (req: Request, res: Response): Promise<void> => {
+    try {
+        const eventosSnapshot = await db.collection('eventos')
+            .orderBy('fecha', 'desc')
+            .get();
+
+        const eventos = eventosSnapshot.docs.map(doc => ({
+            id: doc.id,
+            ...doc.data()
+        }));
+
+        res.status(200).json({
+            success: true,
+            count: eventos.length,
+            eventos
+        });
+
+    } catch (error) {
+        console.error('Error al obtener todos los eventos:', error);
         res.status(500).json({
             success: false,
             message: 'Error interno del servidor'

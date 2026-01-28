@@ -36,7 +36,8 @@ class ApiService extends ChangeNotifier {
     }
   }
 
-  Future<Map<String, dynamic>> register(String nombre, String email, String password) async {
+  Future<Map<String, dynamic>> register(
+      String nombre, String email, String password) async {
     try {
       final response = await http.post(
         Uri.parse('$baseUrl/auth/register'),
@@ -53,7 +54,10 @@ class ApiService extends ChangeNotifier {
         return {'success': true, 'message': 'Registro exitoso'};
       } else {
         final data = jsonDecode(response.body);
-        return {'success': false, 'message': data['error'] ?? 'Error en registro'};
+        return {
+          'success': false,
+          'message': data['error'] ?? 'Error en registro'
+        };
       }
     } catch (e) {
       return {'success': false, 'message': 'Error de conexión: $e'};
@@ -71,7 +75,8 @@ class ApiService extends ChangeNotifier {
     try {
       final response = await http.get(Uri.parse('$baseUrl/eventos'));
       if (response.statusCode == 200) {
-        return jsonDecode(response.body);
+        final data = jsonDecode(response.body);
+        return data['eventos'] ?? [];
       }
       return [];
     } catch (e) {
@@ -85,7 +90,6 @@ class ApiService extends ChangeNotifier {
         Uri.parse('$baseUrl/eventos'),
         headers: {
           'Content-Type': 'application/json',
-          'Authorization': 'Bearer $_token',
         },
         body: jsonEncode(evento),
       );
@@ -115,7 +119,10 @@ class ApiService extends ChangeNotifier {
         return {'success': true, 'message': 'Inscripción exitosa'};
       } else {
         final data = jsonDecode(response.body);
-        return {'success': false, 'message': data['error'] ?? 'Error en inscripción'};
+        return {
+          'success': false,
+          'message': data['error'] ?? 'Error en inscripción'
+        };
       }
     } catch (e) {
       return {'success': false, 'message': 'Error de conexión: $e'};
@@ -128,7 +135,7 @@ class ApiService extends ChangeNotifier {
         Uri.parse('$baseUrl/eventos/inscritos/mis-eventos'),
         headers: {'Authorization': 'Bearer $_token'},
       );
-      
+
       if (response.statusCode == 200) {
         return jsonDecode(response.body);
       }
@@ -161,13 +168,52 @@ class ApiService extends ChangeNotifier {
         Uri.parse('$baseUrl/eventos/$eventoId/inscritos'),
         headers: {'Authorization': 'Bearer $_token'},
       );
-      
+
       if (response.statusCode == 200) {
         return jsonDecode(response.body);
       }
       return [];
     } catch (e) {
       return [];
+    }
+  }
+
+  Future<Map<String, dynamic>> updateEvento(
+      String eventoId, Map<String, dynamic> evento) async {
+    try {
+      final response = await http.put(
+        Uri.parse('$baseUrl/eventos/$eventoId'),
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': 'Bearer $_token',
+        },
+        body: jsonEncode(evento),
+      );
+
+      if (response.statusCode == 200) {
+        return {'success': true, 'data': jsonDecode(response.body)};
+      } else {
+        return {'success': false, 'message': 'Error al actualizar evento'};
+      }
+    } catch (e) {
+      return {'success': false, 'message': 'Error de conexión: $e'};
+    }
+  }
+
+  Future<Map<String, dynamic>> deleteEvento(String eventoId) async {
+    try {
+      final response = await http.delete(
+        Uri.parse('$baseUrl/eventos/$eventoId'),
+        headers: {'Authorization': 'Bearer $_token'},
+      );
+
+      if (response.statusCode == 200) {
+        return {'success': true, 'message': 'Evento eliminado exitosamente'};
+      } else {
+        return {'success': false, 'message': 'Error al eliminar evento'};
+      }
+    } catch (e) {
+      return {'success': false, 'message': 'Error de conexión: $e'};
     }
   }
 }

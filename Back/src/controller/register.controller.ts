@@ -13,7 +13,7 @@ export const registerUser = async (req: Request, res: Response): Promise<void> =
             });
             return;
         }
-
+    
         // Verificar si el usuario ya existe
         const usersRef = db.collection('usuarios');
         const existingUser = await usersRef.where('email', '==', email).limit(1).get();
@@ -25,6 +25,7 @@ export const registerUser = async (req: Request, res: Response): Promise<void> =
             });
             return;
         }
+        
         const hashedPassword = await bcrypt.hash(password, 10);
         const newUser = {
             email,

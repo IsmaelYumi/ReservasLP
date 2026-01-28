@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import '../services/api_service.dart';
 import 'register_screen.dart';
-import 'home_screen.dart';
+import 'admin_event_screen.dart';
 
 class LoginScreen extends StatefulWidget {
   const LoginScreen({super.key});
@@ -36,7 +36,7 @@ class _LoginScreenState extends State<LoginScreen> {
     if (result['success']) {
       Navigator.pushReplacement(
         context,
-        MaterialPageRoute(builder: (_) => const HomeScreen()),
+        MaterialPageRoute(builder: (_) => const AdminEventScreen()),
       );
     } else {
       ScaffoldMessenger.of(context).showSnackBar(
@@ -190,7 +190,8 @@ class _LoginScreenState extends State<LoginScreen> {
                               ),
                             );
                           },
-                          child: const Text('¿No tienes cuenta? Regístrate aquí'),
+                          child:
+                              const Text('¿No tienes cuenta? Regístrate aquí'),
                         ),
                       ],
                     ),

@@ -1,5 +1,6 @@
 import { Router } from 'express';
 import {
+    obtenerTodosEventos,
     crearEvento,
     obtenerEventosUsuario,
     obtenerEventoPorId,
@@ -15,10 +16,13 @@ import { verificarToken } from '../middlewares/auth.middleware';
 
 const router = Router();
 
-// Aplicar middleware a todas las rutas
+// Rutas públicas (SIN autenticación)
+router.get('/', obtenerTodosEventos);
+router.post('/', crearEvento); // Permite crear eventos sin token
+
+// Aplicar middleware a todas las rutas siguientes
 router.use(verificarToken);
 
-router.post('/', crearEvento);
 router.get('/usuario/:userId', obtenerEventosUsuario);
 router.get('/:eventoId', obtenerEventoPorId);
 router.put('/:eventoId', actualizarEvento);

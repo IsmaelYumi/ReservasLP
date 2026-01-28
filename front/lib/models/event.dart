@@ -1,41 +1,76 @@
 class Event {
-  final int id;
+  final String id;
   final String titulo;
   final String descripcion;
   final String fecha;
-  final String hora;
   final String ubicacion;
-  final int cupoMaximo;
-  final int cupoDisponible;
+  final int numInvitados;
+  final String tipoEvento;
+  final String userId;
+  final String estado;
   final String categoria;
-  final int organizadorId;
+  final String? createdAt;
+  final String? updatedAt;
 
   Event({
     required this.id,
     required this.titulo,
     required this.descripcion,
     required this.fecha,
-    required this.hora,
     required this.ubicacion,
-    required this.cupoMaximo,
-    required this.cupoDisponible,
-    required this.categoria,
-    required this.organizadorId,
+    required this.numInvitados,
+    required this.tipoEvento,
+    required this.userId,
+    required this.estado,
+    this.categoria = 'Otros',
+    this.createdAt,
+    this.updatedAt,
   });
 
   factory Event.fromJson(Map<String, dynamic> json) {
     return Event(
-      id: json['id'],
-      titulo: json['titulo'],
-      descripcion: json['descripcion'],
-      fecha: json['fecha'],
-      hora: json['hora'],
-      ubicacion: json['ubicacion'],
-      cupoMaximo: json['cupo_maximo'],
-      cupoDisponible: json['cupo_disponible'],
-      categoria: json['categoria'],
-      organizadorId: json['organizador_id'],
+      id: json['id'] ?? '',
+      titulo: json['titulo'] ?? 'Sin título',
+      descripcion: json['descripcion'] ?? '',
+      fecha: json['fecha'] ?? '',
+      ubicacion: json['ubicacion'] ?? '',
+      numInvitados: json['numInvitados'] ?? 0,
+      tipoEvento: json['tipoEvento'] ?? 'Otros',
+      userId: json['userId'] ?? '',
+      estado: json['estado'] ?? 'pendiente',
+      categoria: _mapTipoToCategoria(json['tipoEvento'] ?? 'Otros'),
+      createdAt: json['createdAt'],
+      updatedAt: json['updatedAt'],
     );
+  }
+
+  static String _mapTipoToCategoria(String tipoEvento) {
+    switch (tipoEvento.toLowerCase()) {
+      case 'tech':
+      case 'tecnología':
+        return 'Tecnología';
+      case 'arte':
+        return 'Arte';
+      case 'sports':
+      case 'deportes':
+        return 'Deportes';
+      case 'educación':
+      case 'education':
+        return 'Educación';
+      case 'negocios':
+      case 'business':
+        return 'Negocios';
+      case 'salud':
+      case 'health':
+        return 'Salud';
+      case 'cultura':
+      case 'culture':
+        return 'Cultura';
+      case 'fiesta':
+        return 'Cultura';
+      default:
+        return 'Otros';
+    }
   }
 
   Map<String, dynamic> toJson() {
@@ -44,12 +79,11 @@ class Event {
       'titulo': titulo,
       'descripcion': descripcion,
       'fecha': fecha,
-      'hora': hora,
       'ubicacion': ubicacion,
-      'cupo_maximo': cupoMaximo,
-      'cupo_disponible': cupoDisponible,
-      'categoria': categoria,
-      'organizador_id': organizadorId,
+      'numInvitados': numInvitados,
+      'tipoEvento': tipoEvento,
+      'userId': userId,
+      'estado': estado,
     };
   }
 }
