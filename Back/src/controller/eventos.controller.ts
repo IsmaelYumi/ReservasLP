@@ -156,11 +156,10 @@ export const obtenerEventoPorId = async (req: Request, res: Response): Promise<v
     }
 };
 
-// Actualizar un evento
+// Actualizar un evento (público - sin requerir autenticación)
 export const actualizarEvento = async (req: Request, res: Response): Promise<void> => {
     try {
         const { eventoId } = req.params;
-        const userId = req.userId;
         
         const { 
             tipoEvento, 
@@ -178,17 +177,6 @@ export const actualizarEvento = async (req: Request, res: Response): Promise<voi
             res.status(404).json({
                 success: false,
                 message: 'Evento no encontrado'
-            });
-            return;
-        }
-
-        const eventoData = eventoDoc.data();
-
-        // Verificar que el evento pertenece al usuario autenticado
-        if (eventoData?.userId !== userId) {
-            res.status(403).json({
-                success: false,
-                message: 'No tienes permiso para actualizar este evento'
             });
             return;
         }
@@ -227,11 +215,10 @@ export const actualizarEvento = async (req: Request, res: Response): Promise<voi
     }
 };
 
-// Eliminar un evento
+// Eliminar un evento (público - sin requerir autenticación)
 export const eliminarEvento = async (req: Request, res: Response): Promise<void> => {
     try {
         const { eventoId } = req.params;
-        const userId = req.userId;
 
         const eventoDoc = await db.collection('eventos').doc(eventoId).get();
         
@@ -239,17 +226,6 @@ export const eliminarEvento = async (req: Request, res: Response): Promise<void>
             res.status(404).json({
                 success: false,
                 message: 'Evento no encontrado'
-            });
-            return;
-        }
-
-        const eventoData = eventoDoc.data();
-
-        // Verificar que el evento pertenece al usuario autenticado
-        if (eventoData?.userId !== userId) {
-            res.status(403).json({
-                success: false,
-                message: 'No tienes permiso para eliminar este evento'
             });
             return;
         }

@@ -19,14 +19,14 @@ const router = Router();
 // Rutas públicas (SIN autenticación)
 router.get('/', obtenerTodosEventos);
 router.post('/', crearEvento); // Permite crear eventos sin token
+router.put('/:eventoId', actualizarEvento); // Permite editar eventos sin token
+router.delete('/:eventoId', eliminarEvento); // Permite eliminar eventos sin token
 
 // Aplicar middleware a todas las rutas siguientes
 router.use(verificarToken);
 
 router.get('/usuario/:userId', obtenerEventosUsuario);
 router.get('/:eventoId', obtenerEventoPorId);
-router.put('/:eventoId', actualizarEvento);
-router.delete('/:eventoId', eliminarEvento);
 router.get('/filtro/tipo', obtenerEventosPorTipo);
 router.get('/Obtener/pendientes', obtenerEventosPendientes);
 // Inscripciones a eventos
